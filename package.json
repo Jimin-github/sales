@@ -1,0 +1,25 @@
+{
+  "name": "xianyu-promotion-generator",
+  "version": "1.0.0",
+  "description": "咸鱼接单宣传图片生成器 - 局域网服务版本",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "咸鱼",
+    "宣传图片",
+    "图片生成器",
+    "接单"
+  ],
+  "author": "专业开发小明",
+  "license": "MIT"
+} 

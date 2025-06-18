@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>咸鱼接单宣传图片生成器</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: #f0f0f0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .item-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: flex-start;
+            max-width: 1200px;
+        }
+
+        .card {
+            width: 400px;
+            height: 400px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            text-align: center;
+            padding: 20px 15px 40px 15px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white"/><circle cx="80" cy="40" r="1.5" fill="white"/><circle cx="40" cy="80" r="1" fill="white"/><circle cx="90" cy="90" r="2.5" fill="white"/></svg>');
+        }
+
+        .emoji {
+            font-size: 70px;
+            margin-bottom: 5px;
+            filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            font-size: 45px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.6);
+            margin-bottom: 8px;
+            line-height: 0.95;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.6);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 50px;
+        }
+
+        .features {
+            font-size: 24px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            line-height: 1.2;
+            margin-bottom: 8px;
+            min-height: 75px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .guarantee {
+            font-size: 22px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            background: rgba(255,255,255,0.25);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        /* 背景渐变样式 */
+        .bg1 { background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%); }
+        .bg2 { background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%); }
+        .bg3 { background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%); }
+        .bg4 { background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%); }
+        .bg5 { background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%); }
+        .bg6 { background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%); }
+        .bg7 { background-image: linear-gradient(60deg, #abecd6 0%, #fbed96 100%); }
+
+        .download-btn {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #333;
+            z-index: 11;
+        }
+
+        .download-btn:hover {
+            background: white;
+        }
+
+        h1 {
+            width: 100%;
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .instructions {
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .instructions h3 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .instructions p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .text-area {
+            width: 400px;
+            height: 400px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Microsoft YaHei', sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .text-area:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 2px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .text-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .save-status {
+            font-size: 12px;
+            color: #4CAF50;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .save-status.show {
+            opacity: 1;
+        }
+
+        .developer-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 咸鱼接单宣传图片生成器</h1>
+    
+    <div class="instructions">
+        <h3>📋 使用说明</h3>
+        <p>• 每张图片都是1:1比例，适合咸鱼平台显示</p>
+        <p>• <strong>推荐方法</strong>：点击右下角的"下载"按钮可以保存高质量图片</p>
+        <p>• <strong>备用方法</strong>：右键点击图片选择"图片另存为"也可以保存</p>
+        <p>• 右侧文本框可以直接编辑宣传文案，<strong>自动保存修改内容</strong></p>
+        <p>• <button onclick="clearSavedContent()" style="background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">🗑️ 清除所有保存的文案</button></p>
+    </div>
+
+    <div class="container">
+        <!-- 1. 简单网页制作 -->
+        <div class="item-group">
+            <div class="card bg1" id="card1">
+                <div class="emoji">😊</div>
+                <div class="title">简单网页制作</div>
+                <div class="price">💰 一律10R！！</div>
+                <div class="features">✨ 24小时完成<br>🎨 专业设计<br>📱 响应式</div>
+                <div class="guarantee">😊 不满意不收费</div>
+                <div class="developer-tag">专业开发小明</div>
+                <button class="download-btn" onclick="downloadCard('card1', '简单网页制作')">下载</button>
+            </div>
+            <div>
+                <div class="text-label">📝 简单网页制作 - 宣传文案 <span class="save-status">✅ 已保存</span></div>
+                <textarea class="text-area" placeholder="在这里编辑宣传文案...">大学生网页设计制作，静态页面html + css + js，html网页设计作业辅导，html代码编写，vue等前端页面编写。
+
+价格超低，写代码速度极快！！！
+
+直接带需求＋预算来！！！
+
+质量保证！作业辅导
+关键代码有手写注释，保证能看懂！！
+
+接受定制
+组团可优惠！！！！！
+
+从图片到HTML跳转，从个人主页到响应式设计，提供一站式服务。
+
+- 纯手工编码，细节决定品质
+- 支持CSS动画、JS效果，如轮播图等
+- 响应式布局，适配各种屏幕尺寸
+- echarts，elementUI等组件库
+
+价格会根据难度调整
+包改到满意
+#辅导作业神器 #技能服务 #网店/网络服务/软件</textarea>
+            </div>
+        </div>
+
+        <!-- 2. 小程序开发 -->
+        <div class="item-group">
+            <div class="card bg2" id="card2">
+                <div class="emoji">🤓</div>
+                <div class="title">小程序开发</div>
+                <div class="price">💰 一律10R！！</div>
+                <div class="features">⚡ 快速开发<br>🔧 功能完善<br>🎯 体验佳</div>
+                <div class="guarantee">😊 不满意不收费</div>
+                <div class="developer-tag">专业开发小明</div>
+                <button class="download-btn" onclick="downloadCard('card2', '小程序开发')">下载</button>
+            </div>
+            <div>
+                <div class="text-label">📝 小程序开发 - 宣传文案 <span class="save-status">✅ 已保存</span></div>
+                <textarea class="text-area" placeholder="在这里编辑宣传文案...">专业小程序开发，微信小程序、支付宝小程序、抖音小程序全覆盖！！！
+
+价格超低，开发速度极快！！！
+
+直接带需求＋预算来！！！
+
+质量保证！功能完善
+关键代码有详细注释，保证能看懂！！
+
+接受定制
+组团可优惠！！！！！
+
+从UI设计到后端接口，从用户登录到支付功能，提供一站式服务。
+
+- 原生开发，性能优异
+- 支持各种API接口对接
+- 完整的用户系统和数据管理
+- 云开发、服务器部署一条龙
+
+价格会根据功能复杂度调整
+包改到满意
+#小程序开发 #技能服务 #网店/网络服务/软件</textarea>
+            </div>
+        </div>
+
+        <!-- 3. 后台管理系统开发 -->
+        <div class="item-group">
+            <div class="card bg3" id="card3">
+                <div class="emoji">😎</div>
+                <div class="title">后台管理系统开发</div>
+                <div class="price">💰 一律10R！！</div>
+                <div class="features">🔐 安全可靠<br>📊 数据统计<br>⚙️ 功能齐全</div>
+                <div class="guarantee">😊 不满意不收费</div>
+                <div class="developer-tag">专业开发小明</div>
+                <button class="download-btn" onclick="downloadCard('card3', '后台管理系统开发')">下载</button>
+            </div>
+            <div>
+                <div class="text-label">📝 后台管理系统开发 - 宣传文案 <span class="save-status">✅ 已保存</span></div>
+                <textarea class="text-area" placeholder="在这里编辑宣传文案...">专业后台管理系统开发，Vue+Element、React+Ant Design等主流技术栈！！！
+
+价格超低，开发效率极高！！！
+
+直接带需求＋预算来！！！
+
+质量保证！功能齐全
+核心代码有详细文档，保证能维护！！
+
+接受定制
+组团可优惠！！！！！
+
+从数据库设计到前端界面，从权限管理到数据统计，提供完整解决方案。
+
+- 现代化UI设计，用户体验佳
+- 完整的RBAC权限系统
+- 数据可视化图表展示
+- 支持MySQL、PostgreSQL等数据库
+
+价格会根据功能模块调整
+包改到满意
+#后台系统 #管理系统 #技能服务 #网店/网络服务/软件</textarea>
+            </div>
+        </div>
+
+        <!-- 4. 专业爬虫代做 -->
+        <div class="item-group">
+            <div class="card bg4" id="card4">
+                <div class="emoji">🤖</div>
+                <div class="title">专业爬虫代做</div>
+                <div class="price">💰 一律10R！！</div>
+                <div class="features">🕷️ 高效采集<br>📈 数据准确<br>🛡️ 反爬技术</div>
+                <div class="guarantee">😊 不满意不收费</div>
+                <div class="developer-tag">专业开发小明</div>
+                <button class="download-btn" onclick="downloadCard('card4', '专业爬虫代做')">下载</button>
+            </div>
+            <div>
+                <div class="text-label">📝 专业爬虫代做 - 宣传文案 <span class="save-status">✅ 已保存</span></div>
+                <textarea class="text-area" placeholder="在这里编辑宣传文案...">专业数据爬虫服务，Python爬虫、反反爬策略、大规模数据采集！！！
+
+价格超低，爬取效率极高！！！
+
+直接带目标网站＋预算来！！！
+
+质量保证！数据准确
+爬虫代码有详细说明，保证能运行！！
+
+接受定制
+批量爬取可优惠！！！！！
+
+从简单网页到复杂JS渲染，从单页面到整站爬取，提供专业服务。
+
+- 多线程高并发爬取
+- 支持验证码识别、IP代理池
+- 反反爬策略，绕过各种限制
+- 数据清洗和格式化输出
+
+价格会根据网站难度调整
+包调试到能用
+#数据爬虫 #数据采集 #技能服务 #网店/网络服务/软件</textarea>
+            </div>
+        </div>
+
+        <!-- 5. 专业app开发 -->
+        <div class="item-group">
+            <div class="card bg5" id="card5">
+                <div class="emoji">📱</div>
+                <div class="title">专业APP开发</div>
+                <div class="price">💰 一律10R！！</div>
+                <div class="features">🚀 原生开发<br>💫 流畅体验<br>🔧 定制功能</div>
+                <div class="guarantee">😊 不满意不收费</div>
+                <div class="developer-tag">专业开发小明</div>
+                <button class="download-btn" onclick="downloadCard('card5', '专业APP开发')">下载</button>
+            </div>
+            <div>
+                <div class="text-label">📝 专业APP开发 - 宣传文案 <span class="save-status">✅ 已保存</span></div>
+                <textarea class="text-area" placeholder="在这里编辑宣传文案...">专业APP开发服务，Android原生、iOS原生、Flutter跨平台开发！！！
+
+价格超低，开发周期短！！！
+
+直接带需求＋预算来！！！
+
+质量保证！性能优异
+核心功能有完整文档，保证能上架！！
+
+接受定制
+多平台开发可优惠！！！！！
+
+从UI设计到功能实现，从测试调试到应用上架，提供全流程服务。
+
+- 原生开发，流畅体验
+- 支持各种第三方SDK集成
+- 完整的用户系统和数据同步
+- 适配各种屏幕尺寸和系统版本
+
+价格会根据功能复杂度调整
+包改到满意
+#APP开发 #移动应用 #技能服务 #网店/网络服务/软件</textarea>
+            </div>
+        </div>
+
+        <!-- 6. 设备数据采集服务 -->
+        <div class="item-group">
+            <div class="card bg6" id="card6">
+                <div class="emoji">📡</div>
+                <div class="title">设备数据采集服务</div>
+                <div class="price">💰 一律10R！！</div>
+                <div class="features">📊 实时监控<br>🔌 多设备<br>☁️ 云端存储</div>
+                <div class="guarantee">😊 不满意不收费</div>
+                <div class="developer-tag">专业开发小明</div>
+                <button class="download-btn" onclick="downloadCard('card6', '设备数据采集服务')">下载</button>
+            </div>
+            <div>
+                <div class="text-label">📝 设备数据采集服务 - 宣传文案 <span class="save-status">✅ 已保存</span></div>
+                <textarea class="text-area" placeholder="在这里编辑宣传文案...">专业设备数据采集服务，物联网设备、传感器数据、工业设备监控！！！
+
+价格超低，部署速度快！！！
+
+直接带设备型号＋预算来！！！
+
+质量保证！稳定可靠
+采集程序有详细配置说明，保证能运行！！
+
+接受定制
+多设备接入可优惠！！！！！
+
+从硬件对接到数据存储，从实时监控到历史分析，提供完整方案。
+
+- 支持多种通信协议（TCP、UDP、串口等）
+- 实时数据采集和云端存储
+- 数据可视化监控面板
+- 异常报警和故障诊断
+
+价格会根据设备数量调整
+包调试到稳定运行
+#数据采集 #物联网 #设备监控 #技能服务 #网店/网络服务/软件</textarea>
+            </div>
+        </div>
+
+        <!-- 7. AI工具定制开发 -->
+        <div class="item-group">
+            <div class="card bg7" id="card7">
+                <div class="emoji">🤖</div>
+                <div class="title">AI工具定制开发</div>
+                <div class="price">💰 一律10R！！</div>
+                <div class="features">🧠 智能算法<br>⚡ 高效处理<br>🎯 精准定制</div>
+                <div class="guarantee">😊 不满意不收费</div>
+                <div class="developer-tag">专业开发小明</div>
+                <button class="download-btn" onclick="downloadCard('card7', 'AI工具定制开发')">下载</button>
+            </div>
+            <div>
+                <div class="text-label">📝 AI工具定制开发 - 宣传文案 <span class="save-status">✅ 已保存</span></div>
+                <textarea class="text-area" placeholder="在这里编辑宣传文案...">专业AI工具定制开发，ChatGPT集成、图像识别、自然语言处理！！！
+
+价格超低，AI技术成熟！！！
+
+直接带应用场景＋预算来！！！
+
+质量保证！效果显著
+AI模型有使用说明，保证能部署！！
+
+接受定制
+批量开发可优惠！！！！！
+
+从需求分析到模型训练，从接口开发到系统集成，提供专业AI服务。
+
+- 支持OpenAI、百度、讯飞等AI平台
+- 自定义AI助手和智能客服
+- 图像识别、文本分析、语音处理
+- 提供API接口和Web界面
+
+价格会根据AI复杂度调整
+包调试到效果满意
+#AI开发 #人工智能 #智能工具 #技能服务 #网店/网络服务/软件</textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 自动保存功能
+        function saveTextContent() {
+            const textAreas = document.querySelectorAll('.text-area');
+            textAreas.forEach((textarea, index) => {
+                const key = `xianyu-text-${index + 1}`;
+                localStorage.setItem(key, textarea.value);
+            });
+            
+            // 显示保存状态
+            showSaveStatus();
+        }
+
+        function showSaveStatus() {
+            const statusElements = document.querySelectorAll('.save-status');
+            statusElements.forEach(status => {
+                status.classList.add('show');
+                setTimeout(() => {
+                    status.classList.remove('show');
+                }, 2000); // 2秒后隐藏
+            });
+        }
+
+        function loadTextContent() {
+            const textAreas = document.querySelectorAll('.text-area');
+            textAreas.forEach((textarea, index) => {
+                const key = `xianyu-text-${index + 1}`;
+                const savedContent = localStorage.getItem(key);
+                if (savedContent) {
+                    textarea.value = savedContent;
+                }
+            });
+        }
+
+        // 页面加载时恢复保存的内容
+        window.addEventListener('DOMContentLoaded', function() {
+            loadTextContent();
+            
+            // 为所有文本框添加自动保存监听器
+            const textAreas = document.querySelectorAll('.text-area');
+            textAreas.forEach(textarea => {
+                // 输入时自动保存（防抖处理）
+                let saveTimeout;
+                textarea.addEventListener('input', function() {
+                    clearTimeout(saveTimeout);
+                    saveTimeout = setTimeout(saveTextContent, 500); // 500ms后保存
+                });
+                
+                // 失去焦点时立即保存
+                textarea.addEventListener('blur', saveTextContent);
+            });
+        });
+
+        // 清除所有保存的内容
+        function clearSavedContent() {
+            if (confirm('确定要清除所有保存的文案内容吗？此操作不可恢复！')) {
+                for (let i = 1; i <= 7; i++) {
+                    localStorage.removeItem(`xianyu-text-${i}`);
+                }
+                location.reload(); // 刷新页面恢复默认内容
+            }
+        }
+
+        function downloadCard(cardId, filename) {
+            const card = document.getElementById(cardId);
+            
+            // 隐藏下载按钮
+            const downloadBtn = card.querySelector('.download-btn');
+            downloadBtn.style.display = 'none';
+            
+            // 使用html2canvas截取卡片
+            html2canvas(card, {
+                width: 400,
+                height: 400,
+                scale: 2, // 提高清晰度
+                backgroundColor: null,
+                useCORS: true,
+                allowTaint: true,
+                logging: false
+            }).then(canvas => {
+                // 恢复下载按钮
+                downloadBtn.style.display = 'block';
+                
+                // 下载图片
+                const link = document.createElement('a');
+                link.download = filename + '.png';
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+            }).catch(error => {
+                // 恢复下载按钮
+                downloadBtn.style.display = 'block';
+                console.error('下载失败:', error);
+                alert('下载失败，请尝试右键点击图片选择"图片另存为"');
+            });
+        }
+
+        // 移除右键菜单阻止，允许正常右键保存
+        // document.addEventListener('contextmenu', function(e) {
+        //     if (e.target.closest('.card')) {
+        //         e.preventDefault();
+        //         alert('提示：您也可以右键点击图片选择"另存为"来保存图片！');
+        //     }
+        // });
+
+        // 添加键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                alert('请点击各个图片右下角的"下载"按钮来保存图片');
+            }
+        });
+    </script>
+</body>
+</html> 
