@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闲鱼宣传图片A/B测试版 - 21张图片</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: #f0f0f0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .theme-group {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .theme-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .cards-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 400px;
+            height: 400px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            padding: 20px 15px 40px 15px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emoji {
+            font-size: 80px;
+            margin-bottom: 5px;
+            filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.4));
+        }
+
+        .title {
+            font-size: 46px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.6);
+            margin-bottom: 8px;
+            line-height: 0.95;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.6);
+            margin-bottom: 8px;
+        }
+
+        .features {
+            font-size: 24px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            line-height: 1.2;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .guarantee {
+            font-size: 22px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            background: rgba(255,255,255,0.25);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .developer-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .download-btn {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #333;
+            z-index: 11;
+        }
+
+        .version-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 11;
+        }
+
+        /* 原版背景 */
+        .bg1 { background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%); }
+        .bg2 { background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%); }
+        .bg3 { background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%); }
+        .bg4 { background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%); }
+        .bg5 { background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%); }
+        .bg6 { background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%); }
+        .bg7 { background-image: linear-gradient(60deg, #abecd6 0%, #fbed96 100%); }
+
+        /* A版本背景 - 价格冲击型 */
+        .bg1a { background-image: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); }
+        .bg2a { background-image: linear-gradient(135deg, #ff9ff3 0%, #f368e0 100%); }
+        .bg3a { background-image: linear-gradient(135deg, #ffa726 0%, #ff5722 100%); }
+        .bg4a { background-image: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+        .bg5a { background-image: linear-gradient(135deg, #fd79a8 0%, #e84393 100%); }
+        .bg6a { background-image: linear-gradient(135deg, #ff7675 0%, #d63031 100%); }
+        .bg7a { background-image: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%); }
+
+        /* B版本背景 - 专业信任型 */
+        .bg1b { background-image: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); }
+        .bg2b { background-image: linear-gradient(135deg, #00b894 0%, #00a085 100%); }
+        .bg3b { background-image: linear-gradient(135deg, #6c5ce7 0%, #5f3dc4 100%); }
+        .bg4b { background-image: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%); }
+        .bg5b { background-image: linear-gradient(135deg, #00cec9 0%, #00b894 100%); }
+        .bg6b { background-image: linear-gradient(135deg, #81ecec 0%, #00cec9 100%); }
+        .bg7b { background-image: linear-gradient(135deg, #55a3ff 0%, #003d82 100%); }
+
+        /* C版本背景 - 速度效率型 */
+        .bg1c { background-image: linear-gradient(135deg, #ffa726 0%, #ff5722 100%); }
+        .bg2c { background-image: linear-gradient(135deg, #ffb74d 0%, #ff9800 100%); }
+        .bg3c { background-image: linear-gradient(135deg, #ffcc02 0%, #ff9800 100%); }
+        .bg4c { background-image: linear-gradient(135deg, #ff8a65 0%, #ff5722 100%); }
+        .bg5c { background-image: linear-gradient(135deg, #ffab40 0%, #ff6f00 100%); }
+        .bg6c { background-image: linear-gradient(135deg, #ffc947 0%, #ff8f00 100%); }
+        .bg7c { background-image: linear-gradient(135deg, #ffb300 0%, #ff6f00 100%); }
+
+        /* D版本背景 - 服务保障型 */
+        .bg1d { background-image: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%); }
+        .bg2d { background-image: linear-gradient(135deg, #8e24aa 0%, #5e35b1 100%); }
+        .bg3d { background-image: linear-gradient(135deg, #7b1fa2 0%, #512da8 100%); }
+        .bg4d { background-image: linear-gradient(135deg, #ab47bc 0%, #7986cb 100%); }
+        .bg5d { background-image: linear-gradient(135deg, #ba68c8 0%, #9575cd 100%); }
+        .bg6d { background-image: linear-gradient(135deg, #ce93d8 0%, #b39ddb 100%); }
+        .bg7d { background-image: linear-gradient(135deg, #9c27b0 0%, #3f51b5 100%); }
+
+        /* E版本背景 - 案例展示型 */
+        .bg1e { background-image: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); }
+        .bg2e { background-image: linear-gradient(135deg, #ffb74d 0%, #ff8f00 100%); }
+        .bg3e { background-image: linear-gradient(135deg, #ffc107 0%, #ff6f00 100%); }
+        .bg4e { background-image: linear-gradient(135deg, #ffca28 0%, #ff8f00 100%); }
+        .bg5e { background-image: linear-gradient(135deg, #ffd54f 0%, #ffb300 100%); }
+        .bg6e { background-image: linear-gradient(135deg, #ffe082 0%, #ffc107 100%); }
+        .bg7e { background-image: linear-gradient(135deg, #fff176 0%, #ffb300 100%); }
+
+        /* 价格冲击型样式 */
+        .price-shock {
+            font-size: 56px !important;
+            color: #FFD700 !important;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.8) !important;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .urgent-tag {
+            background: #ff4757 !important;
+            color: white !important;
+            border: 2px solid #fff !important;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+
+        /* 速度效率型样式 */
+        .speed-tag {
+            background: #ff9800 !important;
+            color: white !important;
+            border: 2px solid #fff !important;
+            animation: speedPulse 1.5s infinite;
+        }
+
+        @keyframes speedPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+
+        /* 服务保障型样式 */
+        .service-tag {
+            background: #9c27b0 !important;
+            color: white !important;
+            border: 2px solid #fff !important;
+            box-shadow: 0 0 15px rgba(156, 39, 176, 0.5);
+        }
+
+        /* 案例展示型样式 */
+        .case-tag {
+            background: linear-gradient(45deg, #ff9800, #ffc107) !important;
+            color: white !important;
+            border: 2px solid #fff !important;
+            animation: goldShine 2s infinite;
+        }
+
+        @keyframes goldShine {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 193, 7, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 193, 7, 0.8), 0 0 30px rgba(255, 152, 0, 0.6); }
+        }
+
+        h1 {
+            width: 100%;
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .instructions {
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 闲鱼宣传图片A/B测试版 - 42张图片</h1>
+    
+    <div class="instructions">
+        <h3>📊 A/B测试说明</h3>
+        <p><strong>🎯 测试目的</strong>：提高闲鱼点击转化率（当前7.6%需要提升到15%+）</p>
+        <p><strong>📋 测试方案</strong>：每个主题6个版本，共42张图片</p>
+        <p><strong>🔄 版本说明</strong>：</p>
+        <p>• <span style="background:#d4fc79;padding:2px 6px;border-radius:4px;">原版</span> - 平衡型设计</p>
+        <p>• <span style="background:#ff6b6b;color:white;padding:2px 6px;border-radius:4px;">A版</span> - 价格冲击型（突出超低价）</p>
+        <p>• <span style="background:#74b9ff;color:white;padding:2px 6px;border-radius:4px;">B版</span> - 专业信任型（强调质量）</p>
+        <p>• <span style="background:#ffa726;color:white;padding:2px 6px;border-radius:4px;">C版</span> - 速度效率型（强调快速交付）</p>
+        <p>• <span style="background:#9c27b0;color:white;padding:2px 6px;border-radius:4px;">D版</span> - 服务保障型（强调售后保障）</p>
+        <p>• <span style="background:#ff9800;color:white;padding:2px 6px;border-radius:4px;">E版</span> - 案例展示型（强调成功案例）</p>
+        <p><strong>💡 建议</strong>：每个版本发布后观察24小时数据，记录点击率变化</p>
+        <button id="batchDownloadBtn" style="background:#00b894;color:white;border:none;padding:12px 24px;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:10px;width:100%;">📦 一键下载全部42张图片</button>
+    </div>
+
+    <div class="container">
+        <!-- 1. 简单网页制作 -->
+        <div class="theme-group">
+            <div class="theme-title">1️⃣ 简单网页制作 - 6个版本测试</div>
+            <div class="cards-row">
+                <div class="card bg1" id="card1-orig">
+                    <div class="version-label">原版</div>
+                    <div class="emoji">😊</div>
+                    <div class="title">简单网页制作</div>
+                    <div class="price">💰 一律10R！！</div>
+                    <div class="features">✨ 24小时完成<br>🎨 专业设计<br>📱 响应式</div>
+                    <div class="guarantee">😊 不满意不收费</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card1-orig', '网页制作-原版')">下载</button>
+                </div>
+
+                <div class="card bg1a" id="card1-a">
+                    <div class="version-label" style="background:#ff6b6b;color:white;">A版</div>
+                    <div class="emoji">🔥</div>
+                    <div class="title">网页制作限时特价</div>
+                    <div class="price price-shock">💥 仅需10R！</div>
+                    <div class="features">⚡ 今日下单立减<br>🎁 前10名送源码<br>🔥 手慢无优惠</div>
+                    <div class="guarantee urgent-tag">⏰ 限时24小时</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card1-a', '网页制作-价格冲击版')">下载</button>
+                </div>
+
+                <div class="card bg1b" id="card1-b">
+                    <div class="version-label" style="background:#74b9ff;color:white;">B版</div>
+                    <div class="emoji">👨‍💻</div>
+                    <div class="title">专业网页开发</div>
+                    <div class="price">💎 品质保证10R</div>
+                    <div class="features">🏆 5年开发经验<br>✅ 100%客户满意<br>🛡️ 售后无忧</div>
+                    <div class="guarantee">🎖️ 专业认证开发者</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card1-b', '网页制作-专业信任版')">下载</button>
+                </div>
+
+                <!-- C版本 - 速度效率型 -->
+                <div class="card bg1c" id="card1-c">
+                    <div class="version-label" style="background:#ffa726;color:white;">C版</div>
+                    <div class="emoji">⚡</div>
+                    <div class="title">网页制作急速版</div>
+                    <div class="price">🚀 24小时10R</div>
+                    <div class="features">⚡ 当天下单当天完成<br>🎯 2小时快速响应<br>💨 闪电交付</div>
+                    <div class="guarantee speed-tag">⏰ 24小时交付</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card1-c', '网页制作-速度效率版')">下载</button>
+                </div>
+
+                <!-- D版本 - 服务保障型 -->
+                <div class="card bg1d" id="card1-d">
+                    <div class="version-label" style="background:#9c27b0;color:white;">D版</div>
+                    <div class="emoji">🛡️</div>
+                    <div class="title">网页制作保障版</div>
+                    <div class="price">🔒 安心价10R</div>
+                    <div class="features">🔄 包修改到满意<br>📞 终身技术支持<br>🛡️ 售后无忧</div>
+                    <div class="guarantee service-tag">✅ 终身保障</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card1-d', '网页制作-服务保障版')">下载</button>
+                </div>
+
+                <!-- E版本 - 案例展示型 -->
+                <div class="card bg1e" id="card1-e">
+                    <div class="version-label" style="background:#ff9800;color:white;">E版</div>
+                    <div class="emoji">🏆</div>
+                    <div class="title">网页制作王牌版</div>
+                    <div class="price">⭐ 口碑价10R</div>
+                    <div class="features">🎖️ 已完成800+项目<br>⭐ 客户好评率99%<br>👑 行业标杆</div>
+                    <div class="guarantee case-tag">🌟 5星好评</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card1-e', '网页制作-案例展示版')">下载</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 小程序开发 -->
+        <div class="theme-group">
+            <div class="theme-title">2️⃣ 小程序开发 - 6个版本测试</div>
+            <div class="cards-row">
+                <div class="card bg2" id="card2-orig">
+                    <div class="version-label">原版</div>
+                    <div class="emoji">🤓</div>
+                    <div class="title">小程序开发</div>
+                    <div class="price">💰 一律10R！！</div>
+                    <div class="features">⚡ 快速开发<br>🔧 功能完善<br>🎯 体验佳</div>
+                    <div class="guarantee">😊 不满意不收费</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card2-orig', '小程序开发-原版')">下载</button>
+                </div>
+
+                <div class="card bg2a" id="card2-a">
+                    <div class="version-label" style="background:#ff6b6b;color:white;">A版</div>
+                    <div class="emoji">💥</div>
+                    <div class="title">小程序超值价</div>
+                    <div class="price price-shock">🎉 只要10R！</div>
+                    <div class="features">💸 市场价300+<br>🎁 现在只要10R<br>⏰ 错过涨价</div>
+                    <div class="guarantee urgent-tag">🔥 最后3个名额</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card2-a', '小程序开发-价格冲击版')">下载</button>
+                </div>
+
+                <div class="card bg2b" id="card2-b">
+                    <div class="version-label" style="background:#74b9ff;color:white;">B版</div>
+                    <div class="emoji">📱</div>
+                    <div class="title">小程序专家</div>
+                    <div class="price">🏅 专业开发10R</div>
+                    <div class="features">🎯 微信官方认证<br>📊 已完成500+<br>⭐ 5星好评率</div>
+                    <div class="guarantee">🔒 技术保障</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card2-b', '小程序开发-专业信任版')">下载</button>
+                </div>
+
+                <div class="card bg2c" id="card2-c">
+                    <div class="version-label" style="background:#ffa726;color:white;">C版</div>
+                    <div class="emoji">💨</div>
+                    <div class="title">小程序急速开发</div>
+                    <div class="price">⚡ 当天10R</div>
+                    <div class="features">🚀 24小时上线<br>⏰ 1小时出方案<br>💨 极速交付</div>
+                    <div class="guarantee speed-tag">🔥 当天完成</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card2-c', '小程序开发-速度效率版')">下载</button>
+                </div>
+
+                <div class="card bg2d" id="card2-d">
+                    <div class="version-label" style="background:#9c27b0;color:white;">D版</div>
+                    <div class="emoji">🔐</div>
+                    <div class="title">小程序保障版</div>
+                    <div class="price">🛡️ 保障价10R</div>
+                    <div class="features">🔄 免费迭代3次<br>📱 包上线审核<br>🎯 功能保证</div>
+                    <div class="guarantee service-tag">💯 包过审</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card2-d', '小程序开发-服务保障版')">下载</button>
+                </div>
+
+                <div class="card bg2e" id="card2-e">
+                    <div class="version-label" style="background:#ff9800;color:white;">E版</div>
+                    <div class="emoji">👑</div>
+                    <div class="title">小程序明星版</div>
+                    <div class="price">🌟 明星价10R</div>
+                    <div class="features">🏆 已开发1000+<br>⭐ 用户评分4.9<br>🎖️ 微信推荐开发者</div>
+                    <div class="guarantee case-tag">🥇 金牌开发</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card2-e', '小程序开发-案例展示版')">下载</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 后台管理系统开发 -->
+        <div class="theme-group">
+            <div class="theme-title">3️⃣ 后台管理系统开发 - 6个版本测试</div>
+            <div class="cards-row">
+                <div class="card bg3" id="card3-orig">
+                    <div class="version-label">原版</div>
+                    <div class="emoji">😎</div>
+                    <div class="title">后台管理系统开发</div>
+                    <div class="price">💰 一律10R！！</div>
+                    <div class="features">🔐 安全可靠<br>📊 数据统计<br>⚙️ 功能齐全</div>
+                    <div class="guarantee">😊 不满意不收费</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card3-orig', '后台系统-原版')">下载</button>
+                </div>
+
+                <div class="card bg3a" id="card3-a">
+                    <div class="version-label" style="background:#ff6b6b;color:white;">A版</div>
+                    <div class="emoji">🚨</div>
+                    <div class="title">后台系统抄底价</div>
+                    <div class="price price-shock">⚡ 仅10R！</div>
+                    <div class="features">💰 原价1000+<br>🎯 现价仅10R<br>📈 立省990R</div>
+                    <div class="guarantee urgent-tag">⏳ 限时秒杀</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card3-a', '后台系统-价格冲击版')">下载</button>
+                </div>
+
+                <div class="card bg3b" id="card3-b">
+                    <div class="version-label" style="background:#74b9ff;color:white;">B版</div>
+                    <div class="emoji">🏢</div>
+                    <div class="title">企业级后台系统</div>
+                    <div class="price">💼 专业级10R</div>
+                    <div class="features">🏆 企业级标准<br>🔐 银行级安全<br>📈 大数据支持</div>
+                    <div class="guarantee">🛡️ 企业认证</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card3-b', '后台系统-专业信任版')">下载</button>
+                </div>
+
+                <div class="card bg3c" id="card3-c">
+                    <div class="version-label" style="background:#ffa726;color:white;">C版</div>
+                    <div class="emoji">🚀</div>
+                    <div class="title">后台系统急速版</div>
+                    <div class="price">⚡ 快速10R</div>
+                    <div class="features">🔥 48小时交付<br>⏰ 3小时响应<br>💨 快速部署</div>
+                    <div class="guarantee speed-tag">⚡ 48小时完成</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card3-c', '后台系统-速度效率版')">下载</button>
+                </div>
+
+                <div class="card bg3d" id="card3-d">
+                    <div class="version-label" style="background:#9c27b0;color:white;">D版</div>
+                    <div class="emoji">🔒</div>
+                    <div class="title">后台系统保障版</div>
+                    <div class="price">🛡️ 安全价10R</div>
+                    <div class="features">🔐 数据安全保障<br>🔄 免费维护1年<br>📞 24小时技术支持</div>
+                    <div class="guarantee service-tag">🔒 安全保障</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card3-d', '后台系统-服务保障版')">下载</button>
+                </div>
+
+                <div class="card bg3e" id="card3-e">
+                    <div class="version-label" style="background:#ff9800;color:white;">E版</div>
+                    <div class="emoji">🏅</div>
+                    <div class="title">后台系统精品版</div>
+                    <div class="price">🏆 精品价10R</div>
+                    <div class="features">🎖️ 服务500+企业<br>⭐ 系统稳定率99.9%<br>🥇 行业领先</div>
+                    <div class="guarantee case-tag">🌟 企业首选</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card3-e', '后台系统-案例展示版')">下载</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. 专业爬虫代做 -->
+        <div class="theme-group">
+            <div class="theme-title">4️⃣ 专业爬虫代做 - 6个版本测试</div>
+            <div class="cards-row">
+                <div class="card bg4" id="card4-orig">
+                    <div class="version-label">原版</div>
+                    <div class="emoji">🤖</div>
+                    <div class="title">专业爬虫代做</div>
+                    <div class="price">💰 一律10R！！</div>
+                    <div class="features">🕷️ 高效采集<br>📈 数据准确<br>🛡️ 反爬技术</div>
+                    <div class="guarantee">😊 不满意不收费</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card4-orig', '爬虫代做-原版')">下载</button>
+                </div>
+
+                <div class="card bg4a" id="card4-a">
+                    <div class="version-label" style="background:#ff6b6b;color:white;">A版</div>
+                    <div class="emoji">💎</div>
+                    <div class="title">爬虫白菜价</div>
+                    <div class="price price-shock">🎊 仅需10R！</div>
+                    <div class="features">🔥 同行收费200+<br>💥 我只要10R<br>⚡ 抢到就是赚到</div>
+                    <div class="guarantee urgent-tag">🏃‍♂️ 手慢无</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card4-a', '爬虫代做-价格冲击版')">下载</button>
+                </div>
+
+                <div class="card bg4b" id="card4-b">
+                    <div class="version-label" style="background:#74b9ff;color:white;">B版</div>
+                    <div class="emoji">🔬</div>
+                    <div class="title">高级爬虫工程师</div>
+                    <div class="price">🎓 专家级10R</div>
+                    <div class="features">🎯 反反爬专家<br>📊 大数据处理<br>🛡️ 100%成功率</div>
+                    <div class="guarantee">🏅 技术权威</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card4-b', '爬虫代做-专业信任版')">下载</button>
+                </div>
+
+                <div class="card bg4c" id="card4-c">
+                    <div class="version-label" style="background:#ffa726;color:white;">C版</div>
+                    <div class="emoji">⚡</div>
+                    <div class="title">爬虫急速版</div>
+                    <div class="price">🚀 急速10R</div>
+                    <div class="features">⚡ 6小时交付<br>🎯 实时数据采集<br>💨 秒级响应</div>
+                    <div class="guarantee speed-tag">⏰ 6小时完成</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card4-c', '爬虫代做-速度效率版')">下载</button>
+                </div>
+
+                <div class="card bg4d" id="card4-d">
+                    <div class="version-label" style="background:#9c27b0;color:white;">D版</div>
+                    <div class="emoji">🛡️</div>
+                    <div class="title">爬虫保障版</div>
+                    <div class="price">🔒 保障价10R</div>
+                    <div class="features">🛡️ 数据准确保证<br>🔄 失败全额退款<br>📊 数据格式定制</div>
+                    <div class="guarantee service-tag">💯 数据保障</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card4-d', '爬虫代做-服务保障版')">下载</button>
+                </div>
+
+                <div class="card bg4e" id="card4-e">
+                    <div class="version-label" style="background:#ff9800;color:white;">E版</div>
+                    <div class="emoji">🏆</div>
+                    <div class="title">爬虫大师版</div>
+                    <div class="price">🥇 大师价10R</div>
+                    <div class="features">🎖️ 采集数据10亿+<br>⭐ 成功率99.8%<br>🏅 爬虫界传奇</div>
+                    <div class="guarantee case-tag">🌟 业界标杆</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card4-e', '爬虫代做-案例展示版')">下载</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. 专业APP开发 -->
+        <div class="theme-group">
+            <div class="theme-title">5️⃣ 专业APP开发 - 6个版本测试</div>
+            <div class="cards-row">
+                <div class="card bg5" id="card5-orig">
+                    <div class="version-label">原版</div>
+                    <div class="emoji">📱</div>
+                    <div class="title">专业APP开发</div>
+                    <div class="price">💰 一律10R！！</div>
+                    <div class="features">🚀 原生开发<br>💫 流畅体验<br>🔧 定制功能</div>
+                    <div class="guarantee">😊 不满意不收费</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card5-orig', 'APP开发-原版')">下载</button>
+                </div>
+
+                <div class="card bg5a" id="card5-a">
+                    <div class="version-label" style="background:#ff6b6b;color:white;">A版</div>
+                    <div class="emoji">🎯</div>
+                    <div class="title">APP开发跳楼价</div>
+                    <div class="price price-shock">🎈 只需10R！</div>
+                    <div class="features">💸 外包公司5000+<br>🎁 我只收10R<br>🔥 亏本冲销量</div>
+                    <div class="guarantee urgent-tag">⌛ 今日限定</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card5-a', 'APP开发-价格冲击版')">下载</button>
+                </div>
+
+                <div class="card bg5b" id="card5-b">
+                    <div class="version-label" style="background:#74b9ff;color:white;">B版</div>
+                    <div class="emoji">🏆</div>
+                    <div class="title">资深APP架构师</div>
+                    <div class="price">👑 大师级10R</div>
+                    <div class="features">🎖️ 10年开发经验<br>📱 上架成功率100%<br>⭐ 用户评分4.8+</div>
+                    <div class="guarantee">🔝 行业顶尖</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card5-b', 'APP开发-专业信任版')">下载</button>
+                </div>
+
+                <div class="card bg5c" id="card5-c">
+                    <div class="version-label" style="background:#ffa726;color:white;">C版</div>
+                    <div class="emoji">🚀</div>
+                    <div class="title">APP急速开发</div>
+                    <div class="price">⚡ 急速10R</div>
+                    <div class="features">🔥 7天上线<br>⏰ 当天出原型<br>💨 快速迭代</div>
+                    <div class="guarantee speed-tag">⚡ 一周上线</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card5-c', 'APP开发-速度效率版')">下载</button>
+                </div>
+
+                <div class="card bg5d" id="card5-d">
+                    <div class="version-label" style="background:#9c27b0;color:white;">D版</div>
+                    <div class="emoji">🛡️</div>
+                    <div class="title">APP保障版</div>
+                    <div class="price">🔒 保障价10R</div>
+                    <div class="features">📱 包过应用商店审核<br>🔄 免费修改5次<br>🛡️ 1年技术支持</div>
+                    <div class="guarantee service-tag">✅ 上架保证</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card5-d', 'APP开发-服务保障版')">下载</button>
+                </div>
+
+                <div class="card bg5e" id="card5-e">
+                    <div class="version-label" style="background:#ff9800;color:white;">E版</div>
+                    <div class="emoji">👑</div>
+                    <div class="title">APP王者版</div>
+                    <div class="price">🏆 王者价10R</div>
+                    <div class="features">🥇 开发APP 300+<br>⭐ 下载量累计1000万+<br>🏅 苹果推荐开发者</div>
+                    <div class="guarantee case-tag">🌟 殿堂级</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card5-e', 'APP开发-案例展示版')">下载</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. 设备数据采集服务 -->
+        <div class="theme-group">
+            <div class="theme-title">6️⃣ 设备数据采集服务 - 6个版本测试</div>
+            <div class="cards-row">
+                <div class="card bg6" id="card6-orig">
+                    <div class="version-label">原版</div>
+                    <div class="emoji">📡</div>
+                    <div class="title">设备数据采集服务</div>
+                    <div class="price">💰 一律10R！！</div>
+                    <div class="features">📊 实时监控<br>🔌 多设备<br>☁️ 云端存储</div>
+                    <div class="guarantee">😊 不满意不收费</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card6-orig', '数据采集-原版')">下载</button>
+                </div>
+
+                <div class="card bg6a" id="card6-a">
+                    <div class="version-label" style="background:#ff6b6b;color:white;">A版</div>
+                    <div class="emoji">⚡</div>
+                    <div class="title">数据采集破价</div>
+                    <div class="price price-shock">🎪 仅要10R！</div>
+                    <div class="features">💰 专业公司800+<br>🎯 现在只要10R<br>📈 节省98%费用</div>
+                    <div class="guarantee urgent-tag">🚀 限量抢购</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card6-a', '数据采集-价格冲击版')">下载</button>
+                </div>
+
+                <div class="card bg6b" id="card6-b">
+                    <div class="version-label" style="background:#74b9ff;color:white;">B版</div>
+                    <div class="emoji">🔬</div>
+                    <div class="title">物联网数据专家</div>
+                    <div class="price">🌐 专业级10R</div>
+                    <div class="features">🏭 工业级标准<br>📡 实时数据流<br>🔒 企业级安全</div>
+                    <div class="guarantee">🎯 精准可靠</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card6-b', '数据采集-专业信任版')">下载</button>
+                </div>
+
+                <div class="card bg6c" id="card6-c">
+                    <div class="version-label" style="background:#ffa726;color:white;">C版</div>
+                    <div class="emoji">⚡</div>
+                    <div class="title">数据采集急速版</div>
+                    <div class="price">🚀 急速10R</div>
+                    <div class="features">⚡ 12小时部署<br>📊 实时监控<br>💨 秒级采集</div>
+                    <div class="guarantee speed-tag">⏰ 半天部署</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card6-c', '数据采集-速度效率版')">下载</button>
+                </div>
+
+                <div class="card bg6d" id="card6-d">
+                    <div class="version-label" style="background:#9c27b0;color:white;">D版</div>
+                    <div class="emoji">🛡️</div>
+                    <div class="title">数据采集保障版</div>
+                    <div class="price">🔒 保障价10R</div>
+                    <div class="features">🔐 数据加密传输<br>🔄 故障自动恢复<br>📞 7×24小时监控</div>
+                    <div class="guarantee service-tag">🛡️ 稳定保障</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card6-d', '数据采集-服务保障版')">下载</button>
+                </div>
+
+                <div class="card bg6e" id="card6-e">
+                    <div class="version-label" style="background:#ff9800;color:white;">E版</div>
+                    <div class="emoji">🏆</div>
+                    <div class="title">数据采集旗舰版</div>
+                    <div class="price">🥇 旗舰价10R</div>
+                    <div class="features">🎖️ 服务企业200+<br>⭐ 数据准确率99.99%<br>🏅 物联网领军者</div>
+                    <div class="guarantee case-tag">🌟 行业标杆</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card6-e', '数据采集-案例展示版')">下载</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. AI工具定制开发 -->
+        <div class="theme-group">
+            <div class="theme-title">7️⃣ AI工具定制开发 - 6个版本测试</div>
+            <div class="cards-row">
+                <div class="card bg7" id="card7-orig">
+                    <div class="version-label">原版</div>
+                    <div class="emoji">🤖</div>
+                    <div class="title">AI工具定制开发</div>
+                    <div class="price">💰 一律10R！！</div>
+                    <div class="features">🧠 智能算法<br>⚡ 高效处理<br>🎯 精准定制</div>
+                    <div class="guarantee">😊 不满意不收费</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card7-orig', 'AI工具-原版')">下载</button>
+                </div>
+
+                <div class="card bg7a" id="card7-a">
+                    <div class="version-label" style="background:#ff6b6b;color:white;">A版</div>
+                    <div class="emoji">🎆</div>
+                    <div class="title">AI工具血亏价</div>
+                    <div class="price price-shock">🎨 只要10R！</div>
+                    <div class="features">💎 市面价2000+<br>🔥 现价仅10R<br>⚡ 99.5%OFF</div>
+                    <div class="guarantee urgent-tag">🎯 最后机会</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card7-a', 'AI工具-价格冲击版')">下载</button>
+                </div>
+
+                <div class="card bg7b" id="card7-b">
+                    <div class="version-label" style="background:#74b9ff;color:white;">B版</div>
+                    <div class="emoji">🧠</div>
+                    <div class="title">AI算法工程师</div>
+                    <div class="price">🤖 顶级AI 10R</div>
+                    <div class="features">🎓 AI博士学位<br>🏅 算法竞赛金奖<br>🔬 前沿技术领先</div>
+                    <div class="guarantee">🚀 AI前沿</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card7-b', 'AI工具-专业信任版')">下载</button>
+                </div>
+
+                <div class="card bg7c" id="card7-c">
+                    <div class="version-label" style="background:#ffa726;color:white;">C版</div>
+                    <div class="emoji">⚡</div>
+                    <div class="title">AI工具急速版</div>
+                    <div class="price">🚀 急速10R</div>
+                    <div class="features">⚡ 3天交付<br>🤖 AI模型现成<br>💨 快速部署</div>
+                    <div class="guarantee speed-tag">⏰ 3天上线</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card7-c', 'AI工具-速度效率版')">下载</button>
+                </div>
+
+                <div class="card bg7d" id="card7-d">
+                    <div class="version-label" style="background:#9c27b0;color:white;">D版</div>
+                    <div class="emoji">🛡️</div>
+                    <div class="title">AI工具保障版</div>
+                    <div class="price">🔒 保障价10R</div>
+                    <div class="features">🤖 AI效果保证<br>🔄 不满意重做<br>📊 性能优化保障</div>
+                    <div class="guarantee service-tag">🎯 效果保证</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card7-d', 'AI工具-服务保障版')">下载</button>
+                </div>
+
+                <div class="card bg7e" id="card7-e">
+                    <div class="version-label" style="background:#ff9800;color:white;">E版</div>
+                    <div class="emoji">👑</div>
+                    <div class="title">AI工具至尊版</div>
+                    <div class="price">🏆 至尊价10R</div>
+                    <div class="features">🥇 开发AI工具100+<br>⭐ 用户满意度99%<br>🏅 AI界领袖</div>
+                    <div class="guarantee case-tag">🌟 AI之王</div>
+                    <div class="developer-tag">专业开发小明</div>
+                    <button class="download-btn" onclick="downloadCard('card7-e', 'AI工具-案例展示版')">下载</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadCard(cardId, filename) {
+            const card = document.getElementById(cardId);
+            
+            // 隐藏下载按钮和版本标签
+            const downloadBtn = card.querySelector('.download-btn');
+            const versionLabel = card.querySelector('.version-label');
+            downloadBtn.style.display = 'none';
+            versionLabel.style.display = 'none';
+            
+            // 使用html2canvas截取卡片
+            html2canvas(card, {
+                width: 400,
+                height: 400,
+                scale: 2,
+                backgroundColor: null,
+                useCORS: true,
+                allowTaint: true,
+                logging: false
+            }).then(canvas => {
+                // 恢复按钮和标签
+                downloadBtn.style.display = 'block';
+                versionLabel.style.display = 'block';
+                
+                // 下载图片
+                const link = document.createElement('a');
+                link.download = filename + '.png';
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+            }).catch(error => {
+                downloadBtn.style.display = 'block';
+                versionLabel.style.display = 'block';
+                console.error('下载失败:', error);
+                alert('下载失败，请尝试右键点击图片选择"图片另存为"');
+            });
+        }
+
+        // 批量下载功能
+        function downloadAll() {
+            const cards = document.querySelectorAll('.card');
+            let index = 0;
+            
+            function downloadNext() {
+                if (index < cards.length) {
+                    const card = cards[index];
+                    const cardId = card.id;
+                    const title = card.querySelector('.title').textContent;
+                    const version = card.querySelector('.version-label').textContent;
+                    const filename = `${title}-${version}`;
+                    
+                    downloadCard(cardId, filename);
+                    index++;
+                    
+                    // 延迟1秒后下载下一张，避免浏览器阻止多文件下载
+                    setTimeout(downloadNext, 1000);
+                }
+            }
+            
+            downloadNext();
+        }
+
+        // 绑定批量下载按钮事件
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('batchDownloadBtn').onclick = downloadAll;
+        });
+    </script>
+</body>
+</html> 
